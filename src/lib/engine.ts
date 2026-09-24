@@ -102,10 +102,11 @@ export interface EngineContext {
 }
 
 // ---------------------------------------------------------------------------
-// Time — local-day math delegated to ./time (single source of truth for zones)
+// Tuning constants (ADR: rolling 7-day window + 2-day correction window)
 // ---------------------------------------------------------------------------
 
-const MOMENTUM_WINDOW_DAYS = 7;
+/** Rolling Momentum horizon — the last 7 local days. */
+export const MOMENTUM_WINDOW_DAYS = 7;
 
 /** Today plus the previous two closed local days are editable. */
 export const CORRECTION_WINDOW_DAYS = 2;

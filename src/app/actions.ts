@@ -8,7 +8,14 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db/client";
-import { campaigns, goals, habits, occurrences, profiles, tasks } from "@/db/schema";
+import {
+  campaigns,
+  goals,
+  habits,
+  occurrences,
+  profiles,
+  tasks,
+} from "@/db/schema";
 import { requireUserId } from "@/db/guard";
 import {
   CORRECTION_WINDOW_DAYS,
@@ -42,7 +49,10 @@ export async function updateProfile(input: {
 // Campaigns
 // ---------------------------------------------------------------------------
 
-export async function createCampaign(input: { title: string; lengthDays: 30 | 60 | 90 }) {
+export async function createCampaign(input: {
+  title: string;
+  lengthDays: 30 | 60 | 90;
+}) {
   const userId = await requireUserId();
   const startAt = localDayKey(new Date()); // TODO(profile): use profile timezone
   const endAt = addLocalDays(new Date(), input.lengthDays);
@@ -60,12 +70,17 @@ export async function createCampaign(input: { title: string; lengthDays: 30 | 60
   return row;
 }
 
-export async function extendCampaign(input: { campaignId: string; newEndAt: string }) {
+export async function extendCampaign(input: {
+  campaignId: string;
+  newEndAt: string;
+}) {
   const userId = await requireUserId();
   await db
     .update(campaigns)
     .set({ endAt: input.newEndAt, status: "active" })
-    .where(and(eq(campaigns.id, input.campaignId), eq(campaigns.userId, userId)));
+    .where(
+      and(eq(campaigns.id, input.campaignId), eq(campaigns.userId, userId)),
+    );
   revalidatePath("/");
 }
 
@@ -74,7 +89,9 @@ export async function archiveCampaign(input: { campaignId: string }) {
   await db
     .update(campaigns)
     .set({ status: "archived" })
-    .where(and(eq(campaigns.id, input.campaignId), eq(campaigns.userId, userId)));
+    .where(
+      and(eq(campaigns.id, input.campaignId), eq(campaigns.userId, userId)),
+    );
   revalidatePath("/");
 }
 
@@ -120,7 +137,9 @@ export async function achieveGoal(input: { goalId: string }) {
 
 export async function deleteGoal(input: { goalId: string }) {
   const userId = await requireUserId();
-  await db.delete(goals).where(and(eq(goals.id, input.goalId), eq(goals.userId, userId)));
+  await db
+    .delete(goals)
+    .where(and(eq(goals.id, input.goalId), eq(goals.userId, userId)));
   revalidatePath("/");
 }
 
@@ -135,10 +154,19 @@ export async function createHabit(input: {
   schedule: Schedule;
 }) {
   const userId = await requireUserId();
-  const tags = input.tags.map((t) => normalizeTag(t)).filter((t): t is string => t !== null);
+  const tags = input.tags
+    .map((t) => normalizeTag(t))
+    .filter((t): t is string => t !== null);
   const [row] = await db
     .insert(habits)
-    .values({ userId, title: input.title, tags, effort: input.effort, schedule: input.schedule, createdAt: localDayKey(new Date()) })
+    .values({
+      userId,
+      title: input.title,
+      tags,
+      effort: input.effort,
+      schedule: input.schedule,
+      createdAt: localDayKey(new Date()),
+    })
     .returning();
   revalidatePath("/");
   return row;
@@ -146,7 +174,9 @@ export async function createHabit(input: {
 
 export async function deleteHabit(input: { habitId: string }) {
   const userId = await requireUserId();
-  await db.delete(habits).where(and(eq(habits.id, input.habitId), eq(habits.userId, userId)));
+  await db
+    .delete(habits)
+    .where(and(eq(habits.id, input.habitId), eq(habits.userId, userId)));
   revalidatePath("/");
 }
 
@@ -164,7 +194,9 @@ export async function setOccurrence(input: {
   const today = localDayKey(new Date());
   const oldest = addLocalDays(new Date(), -CORRECTION_WINDOW_DAYS);
   if (input.date < oldest || input.date > today) {
-    throw new Error(`Date ${input.date} is outside the correction window (${oldest}..${today})`);
+    throw new Error(
+      `Date ${input.date} is outside the correction window (${oldest}..${today})`,
+    );
   }
 
   const [habit] = await db
@@ -174,13 +206,17 @@ export async function setOccurrence(input: {
   if (!habit) throw new Error("Habit not found");
 
   const schedule = habit.schedule as Schedule;
-  const targetCount =
-    schedule.kind === "times-per-day" ? schedule.count : 1;
+  const targetCount = schedule.kind === "times-per-day" ? schedule.count : 1;
 
   const existing = await db
     .select()
     .from(occurrences)
-    .where(and(eq(occurrences.habitId, input.habitId), eq(occurrences.date, input.date)));
+    .where(
+      and(
+        eq(occurrences.habitId, input.habitId),
+        eq(occurrences.date, input.date),
+      ),
+    );
 
   if (existing.length === 0) {
     await db.insert(occurrences).values({
@@ -189,7 +225,12 @@ export async function setOccurrence(input: {
       date: input.date,
       targetCount,
       metCount: input.metCount,
-      status: input.metCount >= targetCount ? "met" : input.metCount > 0 ? "partial" : "missed",
+      status:
+        input.metCount >= targetCount
+          ? "met"
+          : input.metCount > 0
+            ? "partial"
+            : "missed",
     });
   } else {
     const row = existing[0];
@@ -210,7 +251,11 @@ export async function setOccurrence(input: {
     );
     await db
       .update(occurrences)
-      .set({ metCount: updated.metCount, status: updated.status, updatedAt: new Date() })
+      .set({
+        metCount: updated.metCount,
+        status: updated.status,
+        updatedAt: new Date(),
+      })
       .where(eq(occurrences.id, row.id));
   }
   revalidatePath("/");
@@ -222,13 +267,20 @@ export async function setRest(input: { habitId: string; date: string }) {
   const today = localDayKey(new Date());
   const oldest = addLocalDays(new Date(), -CORRECTION_WINDOW_DAYS);
   if (input.date < oldest || input.date > today) {
-    throw new Error(`Date ${input.date} is outside the correction window (${oldest}..${today})`);
+    throw new Error(
+      `Date ${input.date} is outside the correction window (${oldest}..${today})`,
+    );
   }
 
   const existing = await db
     .select()
     .from(occurrences)
-    .where(and(eq(occurrences.habitId, input.habitId), eq(occurrences.date, input.date)));
+    .where(
+      and(
+        eq(occurrences.habitId, input.habitId),
+        eq(occurrences.date, input.date),
+      ),
+    );
   if (existing.length === 0) {
     await db.insert(occurrences).values({
       userId,
@@ -242,7 +294,12 @@ export async function setRest(input: { habitId: string; date: string }) {
   } else {
     await db
       .update(occurrences)
-      .set({ isRest: true, metCount: null, status: "rest", updatedAt: new Date() })
+      .set({
+        isRest: true,
+        metCount: null,
+        status: "rest",
+        updatedAt: new Date(),
+      })
       .where(eq(occurrences.id, existing[0].id));
   }
   revalidatePath("/");
@@ -258,7 +315,9 @@ export async function createTask(input: {
   dueDate: string | null;
 }) {
   const userId = await requireUserId();
-  const tags = input.tags.map((t) => normalizeTag(t)).filter((t): t is string => t !== null);
+  const tags = input.tags
+    .map((t) => normalizeTag(t))
+    .filter((t): t is string => t !== null);
   const [row] = await db
     .insert(tasks)
     .values({
@@ -295,6 +354,8 @@ export async function reopenTaskAction(input: { taskId: string }) {
 
 export async function deleteTask(input: { taskId: string }) {
   const userId = await requireUserId();
-  await db.delete(tasks).where(and(eq(tasks.id, input.taskId), eq(tasks.userId, userId)));
+  await db
+    .delete(tasks)
+    .where(and(eq(tasks.id, input.taskId), eq(tasks.userId, userId)));
   revalidatePath("/");
 }

@@ -25,7 +25,10 @@ export async function requireProfile(input: { timezoneHint?: string } = {}) {
   const userId = await currentUserId();
   if (!userId) throw new UnauthorizedError("sign-in required");
 
-  const existing = await db.select().from(profiles).where(eq(profiles.userId, userId));
+  const existing = await db
+    .select()
+    .from(profiles)
+    .where(eq(profiles.userId, userId));
   if (existing.length > 0) return existing[0];
 
   const [created] = await db

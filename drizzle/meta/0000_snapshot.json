@@ -83,12 +83,8 @@
           "tableFrom": "campaigns",
           "tableTo": "profiles",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -183,12 +179,8 @@
           "tableFrom": "goals",
           "tableTo": "profiles",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -197,12 +189,8 @@
           "tableFrom": "goals",
           "tableTo": "campaigns",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "campaign_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["campaign_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -286,12 +274,8 @@
           "tableFrom": "habits",
           "tableTo": "profiles",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -401,12 +385,8 @@
           "tableFrom": "occurrences",
           "tableTo": "profiles",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -415,12 +395,8 @@
           "tableFrom": "occurrences",
           "tableTo": "habits",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "habit_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["habit_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -430,10 +406,7 @@
         "occurrences_habit_date": {
           "name": "occurrences_habit_date",
           "nullsNotDistinct": false,
-          "columns": [
-            "habit_id",
-            "date"
-          ]
+          "columns": ["habit_id", "date"]
         }
       },
       "policies": {},
@@ -601,12 +574,8 @@
           "tableFrom": "tasks",
           "tableTo": "profiles",
           "schemaTo": "app_public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

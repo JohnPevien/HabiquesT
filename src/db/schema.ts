@@ -35,8 +35,12 @@ export const profiles = app.table("profiles", {
   mode: text("mode").notNull().default("rpg"),
   // system | light | dark (ADR: system theme plus override).
   theme: text("theme").notNull().default("system"),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export const campaigns = app.table(
@@ -52,7 +56,9 @@ export const campaigns = app.table(
     startAt: text("start_at").notNull(), // local day key YYYY-MM-DD
     endAt: text("end_at").notNull(), // local day key; ended ⇒ read-only
     status: text("status").notNull().default("active"), // active | ended | archived
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (t) => [index("campaigns_user_idx").on(t.userId)],
 );
@@ -71,7 +77,9 @@ export const goals = app.table(
     metric: jsonb("metric"),
     // Optional target date (local day key) — may come from a campaign end.
     targetDate: text("target_date"),
-    campaignId: uuid("campaign_id").references(() => campaigns.id, { onDelete: "set null" }),
+    campaignId: uuid("campaign_id").references(() => campaigns.id, {
+      onDelete: "set null",
+    }),
     // Player-confirmed only; the engine never flips this.
     achievedAt: timestamp("achieved_at", { withTimezone: true }),
     createdAt: text("created_at").notNull(), // local day key — pace anchor
@@ -114,7 +122,9 @@ export const occurrences = app.table(
     status: text("status").notNull().default("pending"),
     // XP pays once per actual completion (ADR).
     xpAwarded: boolean("xp_awarded").notNull().default(false),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (t) => [
     unique("occurrences_habit_date").on(t.habitId, t.date),
@@ -137,7 +147,9 @@ export const tasks = app.table(
     // Reopen nulls completedAt but keeps xpAwarded — XP paid stays paid.
     xpAwarded: boolean("xp_awarded").notNull().default(false),
     createdAt: text("created_at").notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (t) => [index("tasks_user_idx").on(t.userId)],
 );
@@ -154,24 +166,42 @@ export const profilesRelations = relations(profiles, ({ many }) => ({
 }));
 
 export const campaignsRelations = relations(campaigns, ({ one, many }) => ({
-  profile: one(profiles, { fields: [campaigns.userId], references: [profiles.userId] }),
+  profile: one(profiles, {
+    fields: [campaigns.userId],
+    references: [profiles.userId],
+  }),
   goals: many(goals),
 }));
 
 export const goalsRelations = relations(goals, ({ one }) => ({
-  profile: one(profiles, { fields: [goals.userId], references: [profiles.userId] }),
-  campaign: one(campaigns, { fields: [goals.campaignId], references: [campaigns.id] }),
+  profile: one(profiles, {
+    fields: [goals.userId],
+    references: [profiles.userId],
+  }),
+  campaign: one(campaigns, {
+    fields: [goals.campaignId],
+    references: [campaigns.id],
+  }),
 }));
 
 export const habitsRelations = relations(habits, ({ one, many }) => ({
-  profile: one(profiles, { fields: [habits.userId], references: [profiles.userId] }),
+  profile: one(profiles, {
+    fields: [habits.userId],
+    references: [profiles.userId],
+  }),
   occurrences: many(occurrences),
 }));
 
 export const occurrencesRelations = relations(occurrences, ({ one }) => ({
-  habit: one(habits, { fields: [occurrences.habitId], references: [habits.id] }),
+  habit: one(habits, {
+    fields: [occurrences.habitId],
+    references: [habits.id],
+  }),
 }));
 
 export const tasksRelations = relations(tasks, ({ one }) => ({
-  profile: one(profiles, { fields: [tasks.userId], references: [profiles.userId] }),
+  profile: one(profiles, {
+    fields: [tasks.userId],
+    references: [profiles.userId],
+  }),
 }));

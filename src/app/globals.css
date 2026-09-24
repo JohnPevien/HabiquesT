@@ -128,3 +128,48 @@
     @apply font-sans;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * HabiquesT mode palettes (ADR: deep presentation packs, light + dark each).
+ * Modes re-skin --primary/--ring/--chart-1 via [data-mode] on <html>; the
+ * neutral shadcn tokens stay untouched so contrast ratios hold everywhere.
+ * ------------------------------------------------------------------------- */
+
+/* RPG — ember/gold campaign. Light: parchment & brass. Dark: dungeon & torch. */
+[data-mode="rpg"] {
+  --primary: oklch(0.55 0.16 60);
+  --ring: oklch(0.65 0.14 60);
+  --chart-1: oklch(0.72 0.15 65);
+}
+.dark[data-mode="rpg"],
+[data-mode="rpg"].dark {
+  --primary: oklch(0.75 0.15 70);
+  --ring: oklch(0.7 0.13 60);
+  --chart-1: oklch(0.8 0.14 70);
+}
+
+/* Anime — training-arc cyan/aura. Light: sky & resolve. Dark: night & aura. */
+[data-mode="anime"] {
+  --primary: oklch(0.55 0.13 230);
+  --ring: oklch(0.62 0.12 230);
+  --chart-1: oklch(0.75 0.12 220);
+}
+.dark[data-mode="anime"],
+[data-mode="anime"].dark {
+  --primary: oklch(0.78 0.12 220);
+  --ring: oklch(0.7 0.12 225);
+  --chart-1: oklch(0.82 0.12 215);
+}
+
+/* Arcade — neon cabinet magenta/green. Light: cabinet cream & LED. Dark: CRT & neon. */
+[data-mode="arcade"] {
+  --primary: oklch(0.52 0.2 340);
+  --ring: oklch(0.62 0.18 340);
+  --chart-1: oklch(0.7 0.17 330);
+}
+.dark[data-mode="arcade"],
+[data-mode="arcade"].dark {
+  --primary: oklch(0.75 0.18 345);
+  --ring: oklch(0.68 0.17 340);
+  --chart-1: oklch(0.78 0.16 145);
+}

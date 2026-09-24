@@ -13,7 +13,11 @@ export function localDayKey(date: Date, timezone = "UTC"): string {
 }
 
 /** Day key N whole days away (calendar-day arithmetic on the UTC anchor). */
-export function addLocalDays(date: Date, days: number, timezone = "UTC"): string {
+export function addLocalDays(
+  date: Date,
+  days: number,
+  timezone = "UTC",
+): string {
   // Shift to the zone's "now", add days, normalize back through the zone so
   // DST offsets cannot pull the key across an unintended boundary.
   const shifted = new Date(date.getTime() + days * 86_400_000);
