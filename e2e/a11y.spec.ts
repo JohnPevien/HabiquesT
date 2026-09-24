@@ -48,4 +48,26 @@ test.describe("@a11y accessibility", () => {
 
     expect(results.violations).toEqual([]);
   });
+  test("sign-in page has no detectable accessibility violations", async ({
+    page,
+  }) => {
+    await page.goto("/auth/sign-in");
+
+    const results = await new AxeBuilder({ page }).analyze();
+    if (results.violations.length > 0) {
+      const report = results.violations
+        .map((v) => {
+          const nodes = v.nodes
+            .map((n) => `  - ${n.target.join(", ")} → ${n.failureSummary}`)
+            .join("\n");
+          return `[${v.impact}] ${v.id}: ${v.description}\n  Help: ${v.helpUrl}\n${nodes}`;
+        })
+        .join("\n\n");
+      console.error(
+        `\n${results.violations.length} accessibility violation(s) found on /auth/sign-in:\n\n${report}\n`,
+      );
+    }
+
+    expect(results.violations).toEqual([]);
+  });
 });

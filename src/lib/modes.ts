@@ -1,6 +1,9 @@
 // Mode registry — the presentation packs (ADR: deep presentation packs).
 // One engine; each mode renames concepts, carries flavor copy, and pairs with
 // a tuned palette in globals.css ([data-mode] on <html>, light + dark).
+//
+// IMPORTANT: every field must be serializable — ModeCopy crosses the RSC
+// boundary as props. No functions. Templates use "{level}" placeholders.
 
 export type ModeId = "rpg" | "anime" | "arcade";
 
@@ -19,8 +22,8 @@ export interface ModeCopy {
   level: string;
   /** One-line flavor shown on the dashboard. */
   tagline: string;
-  /** Celebration copy when a level unlocks. */
-  levelUp: (level: number) => string;
+  /** Celebration copy when a level unlocks — "{level}" replaced client-side. */
+  levelUpTemplate: string;
 }
 
 export const MODES: Record<ModeId, ModeCopy> = {
@@ -33,7 +36,7 @@ export const MODES: Record<ModeId, ModeCopy> = {
     momentum: "Momentum",
     level: "Renown",
     tagline: "Every plan kept is a torch carried forward.",
-    levelUp: (level) => `Renown ${level} — the guild marks your name.`,
+    levelUpTemplate: "Renown {level} — the guild marks your name.",
   },
   anime: {
     id: "anime",
@@ -44,7 +47,7 @@ export const MODES: Record<ModeId, ModeCopy> = {
     momentum: "Spirit",
     level: "Rank",
     tagline: "The montage is daily. Keep showing up.",
-    levelUp: (level) => `Rank ${level} reached — your aura sharpens.`,
+    levelUpTemplate: "Rank {level} reached — your aura sharpens.",
   },
   arcade: {
     id: "arcade",
@@ -55,7 +58,7 @@ export const MODES: Record<ModeId, ModeCopy> = {
     momentum: "Score",
     level: "Stage",
     tagline: "No continues needed — just press start again.",
-    levelUp: (level) => `Stage ${level} unlocked — insert coin.`,
+    levelUpTemplate: "Stage {level} unlocked — insert coin.",
   },
 };
 

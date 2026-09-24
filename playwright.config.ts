@@ -24,7 +24,7 @@ export default defineConfig({
   },
 
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    baseURL: process.env.E2E_BASE_URL ?? "http://127.0.0.1:3000",
     trace: "on-first-retry",
   },
 
@@ -45,9 +45,14 @@ export default defineConfig({
 
   webServer: {
     // CI tests the production build (closer to what users receive);
-    // local dev uses the fast dev server.
-    command: process.env.CI ? "pnpm build && pnpm start" : "pnpm dev",
-    url: "http://127.0.0.1:3000",
+    // local dev uses the fast dev server. Port 3000 collides with a
+    // sibling project on this machine — override with E2E_PORT.
+    command: process.env.CI
+      ? "pnpm build && pnpm start"
+      : `pnpm dev --port ${process.env.E2E_PORT ?? 3100}`,
+    url:
+      process.env.E2E_BASE_URL ??
+      `http://127.0.0.1:${process.env.E2E_PORT ?? 3100}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
