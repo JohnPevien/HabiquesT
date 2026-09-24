@@ -1,0 +1,121 @@
+# Scoring Horizon for Habit Momentum — Evidence Note
+
+**Question.** Which scoring horizon is most behaviourally appropriate for a gamified habit/goal app whose first audience is **adults with ADHD**: rolling 7-day, rolling 28-day, weekly reset, or lifetime scoring?
+
+**Date.** 2026-09-18 · **Status.** Research only — informed ADR `docs/adr/0001-momentum-replaces-damage.md` (rolling 7-day primary + 28-day trend).
+
+**How to read this note.** Every claim is tagged:
+- **`[EV]`** — a finding reported in a cited primary source (quoted or closely paraphrased; numbers are quoted verbatim, never estimated).
+- **`[INF]`** — a design inference drawn from that evidence. Inferences are mine; they are not findings.
+- **`[GAP]`** — not established by the evidence reviewed.
+
+---
+
+## 1. Recommendation (single, firm)
+
+**Make a rolling 7-day window the primary momentum score**, expressed as *days met in the last 7*, and pair it with a **secondary, non-punitive rolling 28-day trend layer** (trend line / calendar heat-map, not a second score).
+
+**Do not** use a weekly reset-to-zero as the score. **Do not** use lifetime scoring as a score.
+
+Keep lifetime data only as a **monotone total** ("days practised since you started") plus milestones — an archive, never a denominator.
+
+**Confidence:** moderate-to-high overall.
+- **High** that weekly-reset-to-zero and lifetime-*scoring* are the two worst fits for this audience: three independent literatures (goal-violation, broken-streak, habit-lapse) converge on the same failure mode.
+- **Moderate** that rolling 7-day beats rolling 28-day as the *primary* horizon. This follows from audience-specific reinforcement-timing evidence plus the arithmetic of a rolling window, but **no study compares these horizons head-to-head** `[GAP]`.
+
+---
+
+## 2. Evidence base
+
+| Source | Design | What it establishes |
+|---|---|---|
+| **Lally, van Jaarsveld, Potts & Wardle (2010)**, *Eur J Soc Psychol* 40(6):998–1009 | 96 volunteers, 84 days, daily Self-Report Habit Index | Habit strength (automaticity) follows an **asymptotic curve**: rapid early gains, then a plateau. Median **66 days** to plateau; range **18–254 days**. |
+| **Gardner, Lally & Wardle (2012)**, *Br J Gen Pract* 62(605):664–666 | Peer-reviewed practice commentary reporting Lally 2010 | Verbatim: *"Missing the occasional opportunity to perform the behaviour did not seriously impair the habit formation process: automaticity gains soon resumed after one missed performance."* Also: simpler actions plateau sooner than elaborate routines; expect ~**10 weeks** of daily repetition; self-monitoring ticksheets recommended during the learning phase. |
+| **Edgren, Baretta & Inauen (2025)**, *Appl Psychol Health Well-Being* 17(1):e12612 | 91-day intensive longitudinal; N=194; 11,805 daily observations; four health-risk behaviours | Habit **decay** is gradual and decelerating, not a cliff. Time for decay to stabilise ranged **1–65 days**; asymptotic/logistic models fit best for 54% of the sample; substantial between-person heterogeneity. |
+| **Dai, Milkman & Riis (2014)**, *Management Science* 60(10):2563–2582 | Three archival field studies: Google "diet" search (3,104 days); university gym records (N=11,912; 5.3M person-days); stickK commitments | **Fresh start effect.** Relative increases in "diet" search volume: **+14.4%** at start of week, **+3.7%** at start of month, **+82.1%** at start of year, **+10.2%** after a federal holiday. Gym attendance rises at week/month/year starts and declines as each cycle proceeds; also rises after school breaks and declines across a personal "birth year." Authors state field data give imperfect insight into mechanism. |
+| **Silverman & Barasch (2023)**, *J Consumer Research* 49(6):1095–1117 | Seven studies (logged-behaviour manipulations + experiments) | Verbatim: *"intact streaks highlighted via behavioral logs increase consumers' subsequent engagement…, relative to when broken streaks are highlighted. Importantly, this effect is independent of actual past behavior… consumers consider maintaining a logged streak to be a meaningful goal in and of itself."* Effect is **amplified when the break is attributed internally** and **attenuated when the streak can be "repaired."** |
+| **Soman & Cheema (2004)**, *J Consumer Research* 31(1):52–62 | Two experiments | Verbatim: *"violating one's goal may cause a deterioration of subsequent performance as compared to individuals who have no goals. When the violation of one's goal is coded as a failure, it can result in demotivation, negative emotion, and consequently poorer performance."* |
+| **Harkin et al. (2016)**, *Psychological Bulletin* 142(2):198–229 | Meta-analysis of 138 randomised experiments, N=19,951 | Progress-monitoring interventions promote goal attainment (**d⁺ = 0.40, 95% CI [0.32, 0.48]**) and raise monitoring frequency (d⁺ = 1.98, CI [1.71, 2.24]); monitoring frequency mediated attainment. Effects were **larger when progress was physically recorded and when reported/made public**. |
+| **Kivetz, Urminsky & Zheng (2006)**, *J Marketing Research* 43(1):39–58 | Field experiments + secondary customer data | **Goal gradient:** effort accelerates as the reward nears. "Illusory progress" (a 12-stamp card with 2 pre-filled stamps) speeds completion versus a plain 10-stamp card; stronger acceleration predicted **greater retention and faster re-engagement**. |
+| **Jackson & MacKillop (2016)**, *Biol Psychiatry CNNI* 1(4):316–325 | Meta-analysis: 21 investigations, 25 case-control comparisons, N=3,913 | Monetary delay discounting is elevated in ADHD with a **medium** effect (**d = 0.43, p < 10⁻¹⁵**). **No significant moderation by sample age (<18 vs >18)** — the effect holds in adults. |
+| **Marx, Hacker, Yu, Cortese & Sonuga-Barke (2021)**, *J Atten Disord* 25(2):171–187 | Meta-analysis: 37 group comparisons, N=3,763 (53% ADHD) | ADHD chooses small-immediate over larger-delayed rewards more often (small-to-medium effects in both paradigms). **Offering real (non-hypothetical) rewards in the simple choice paradigm almost doubled the odds ratio for ADHD participants.** |
+| **Luman, Oosterlaan & Sergeant (2005)**, *Clin Psychol Rev* 25(2):183–213 | Review: 22 studies, N=1,181 | Reinforcement improves task performance and motivation in both groups, **somewhat more prominently in ADHD**; **high-intensity reinforcement is highly effective in ADHD**; children with ADHD prefer immediate over delayed reward. |
+| **Sonuga-Barke, Taylor, Sembi & Smith (1992)**, *J Child Psychol Psychiatry* 33(2):387–398 | Two choice-delay experiments | Origin of the **delay aversion** account: hyperactive children were "more concerned to reduce overall delay levels than… to maximize reward amount or immediacy." |
+| **Volkow et al. (2011)**, *Mol Psychiatry* 16(11):1147–1154 | PET; 45 adults with ADHD vs 41 controls | Dopamine reward-pathway dysfunction is associated with **trait motivation deficits in adults with ADHD** (Achievement scale lower in ADHD, correlated with D2/D3 receptor and transporter availability). |
+| **Barkley, Murphy & Bush (2001)**, *Neuropsychology* 15(3):351–360 | 104 adults with ADHD vs 64 controls | Adults with ADHD showed shorter time reproductions and greater reproduction errors (12-, 45-, 60-s), robust to IQ and comorbid ODD/depression/anxiety. |
+| **Selaskowski et al. (2022)**, *Psychiatry Research* 317:114802 | RCT, 60 adults with ADHD, 8 weekly sessions | App-supported psychoeducation (weekly cadence) beat brochure control on inattention/impulsivity and on **homework compliance**. |
+| **Aulagnon, Cristia, Cueto & Malamud (2025)**, NBER WP 34173 | Nationwide RCT, 60,000 students, 6 weeks | Highlighting streaks beat personalised reminders on the **intensive margin** (+9.4pp vs +6.9pp of weeks connected) but lost on the **extensive margin** (+2.8pp vs +3.8pp connecting at all). The authors report **no discouragement effect** when students disconnected. Effects were **concentrated on message days**. (Caveat: endline learning results rest on ~1,500 test-takers and were not statistically distinguishable across arms.) |
+
+### Excluded on evidence-quality grounds `[GAP]`
+Vendor/industry telemetry on "streak freezes" and self-published app A/B results (blog posts; no peer review; unauditable samples) were found during search and **deliberately excluded**. Duolingo's self-reported A/B figures are cited second-hand by Aulagnon et al. but are not peer-reviewed. Khan Academy's public retirement of streaks (also cited by Aulagnon et al.) is a product decision, not evidence. **No peer-reviewed, large-scale field evidence on streak-freeze/repair mechanics was located** — the only peer-reviewed anchor for repair is Silverman & Barasch's moderator.
+
+---
+
+## 3. The four horizons against the five criteria
+
+| | Lapse recovery | Fresh-start effects | Streak breakage | Immediate feedback | Sustained habit formation |
+|---|---|---|---|---|---|
+| **Rolling 7-day** | **Strong.** A missed day ages out within 7 days; a single miss degrades the display partially (6 of 7) rather than zeroing it. Consistent with a single missed opportunity being benign `[EV Lally/Gardner → INF]`. | **Strong.** The week is empirically the strongest *recurring* landmark (+14.4% `[EV Dai]`), and every day partly refreshes the window, so the landmark effect is harvested without a hard reset `[INF]`. | **Low risk.** There is no discrete "break" event to display, so the broken-streak penalty `[EV Silverman & Barasch]` is not manufactured `[INF]`. Residual risk: a run of misses drags the score toward zero for up to a week. | **Strongest of the four.** One new day moves roughly 1/7 of the display, so today's action visibly changes the score `[INF, arithmetic]` — the property that matters most given ADHD reinforcement-timing evidence `[EV Jackson & MacKillop; Marx; Luman]`. | **Weak alone.** 7 days is far short of the 66-day median plateau and ~10-week guidance `[EV Lally; Gardner]`. Needs the 28-day layer and milestones to represent the formation arc `[INF]`. |
+| **Rolling 28-day** | **Moderate.** A lapse stays visible for up to four weeks, so "I'm behind" persists and full recovery is slow `[INF]`. | **Weak.** The month-start landmark is the *weakest* recurring landmark tested (+3.7% `[EV Dai]`). | **Low risk.** Same no-break property as rolling 7, and each individual miss costs proportionally less — but it lingers longer `[INF]`. | **Weak.** One action moves ~1/28 of the display; feedback latency is precisely the parameter that is degraded in ADHD `[EV Jackson & MacKillop; Luman; Marx]`. | **Strongest as a representation** of the 18–254-day formation arc and the 1–65-day decay-stabilisation range `[EV Lally; Edgren]`; good for trend, poor for moment-to-moment motivation `[INF]`. |
+| **Weekly reset** | **Weakest.** One miss converts accumulated progress to zero, contradicting the finding that a missed opportunity does not impair habit formation `[EV Lally/Gardner → INF]`. | **Strong on paper** — a reset manufactures a genuine landmark, and week-start is a real landmark `[EV Dai]`; repairability attenuates break damage `[EV Silverman & Barasch]`. | **Highest risk.** It manufactures exactly the broken-streak state shown to depress subsequent engagement `[EV Silverman & Barasch]`, and the coded-as-failure violation that can fall below a no-goal baseline `[EV Soman & Cheema]`. | **Mixed.** Progress visibly refills mid-week, then collapses 0→1 at the boundary `[INF]`. | **Weak.** Produces repeated all-or-nothing cycles, misrepresenting a process in which consistency matters but perfection is not required `[EV Lally/Gardner]`. |
+| **Lifetime scoring** | **None.** A miss is permanently inscribed, and as the denominator only grows the deficit is mathematically un-closeable `[INF, arithmetic]` — a standing cue for the internal attribution that amplifies disengagement `[EV Silverman & Barasch → INF]`. | **None.** No landmark can reset it; the fresh-start mechanism is structurally unavailable `[INF]`. | **Highest — structural.** The permanent gap *is* a broken-streak display, without repair `[INF]`. | **Weakest.** The marginal effect of one day shrinks toward zero as tenure grows `[INF, arithmetic]`. | **Mixed.** Captures long-run identity, but past ~2 months the asymptotic curve `[EV Lally]` means added numbers add little information, and an unbounded goal removes the near-goal acceleration that predicts retention `[EV Kivetz → INF]`. |
+
+---
+
+## 4. Why the alternatives are weaker
+
+**Weekly reset is the weakest of the four as a *score*, despite the best landmark story.** Three independent findings converge on the same failure: coding a single miss as a *failure* can drop subsequent performance below the no-goal baseline `[EV Soman & Cheema]`; *displaying* a broken streak reduces subsequent engagement `[EV Silverman & Barasch]`; and empirically a single missed opportunity does **not** impair habit formation `[EV Lally/Gardner]`. A weekly reset converts a harmless, expected event into a maximally punishing one. Its one genuine advantage — the week-start fresh start `[EV Dai]` — can be captured without zeroing anything, by aligning the display and the nudges to the week boundary. `[INF]`
+
+**Rolling 28-day is the best *representation* and the wrong *primary*.** It matches the timescales of formation and decay better than any alternative `[EV Lally; Edgren]`, but as the primary score it imposes feedback latency on an audience whose defining motivational profile is steeper delay discounting (`d = 0.43`, no age moderation) `[EV Jackson & MacKillop]`, who respond disproportionately to immediate and real rewards `[EV Marx; Luman]`, and for whom waiting itself is aversive `[EV Sonuga-Barke]`. It also keeps a lapse visible for a month, extending the window in which a user sees themselves as behind `[INF]`. Its correct role is context: a trend line, not a target.
+
+**Lifetime scoring fails on three of five criteria and has no compensating mechanism.** Everything about it is remote and monotone. It offers no reset `[INF]`, punishes early tenure (the opposite of the endowed-progress effect, where artificial advancement increases effort `[EV Nunes & Drèze]`), and dilutes feedback to near-zero precisely for the long-tenured users who need recovery support `[INF]`. Note the distinction: a lifetime **total** ("days practised: 412") is an achievement that never creates a deficit and can support identity framing; a lifetime **score** (a ratio with an ever-growing denominator) is a permanent failure record. Only the former belongs in the product.
+
+---
+
+## 5. Design implications
+
+1. **Frame the primary score as accumulated achievement, never as deficiency.** "6 of the last 7 days" rather than "you broke your chain" — the display representation, not the underlying behaviour, drove engagement differences in Silverman & Barasch `[EV → INF]`.
+2. **Never render a bare zero.** If the last-7 count is 0, show a restart affordance, not an empty ring. Pair a restart with endowment — Kivetz's illusory-progress result and Nunes & Drèze's endowed-progress result both show artificial advancement increases subsequent effort `[EV → INF]`.
+3. **Provide a repair path for gaps.** This is the one moderator with peer-reviewed support for attenuating the broken-streak penalty (`[EV]` Silverman & Barasch). The efficacy of any specific freeze/grace mechanic is *not* established `[GAP]`.
+4. **Show progress toward a *near* goal inside the window.** Goal-gradient acceleration and retention both scale with proximity to the goal `[EV Kivetz]` — a 7-day window supplies a near, frequently-reached goal; a lifetime score does not.
+5. **Align nudges and score refreshes to a fixed time-of-day cue and to the week boundary.** Landmark effects are real at week start `[EV Dai]`, and streak messaging effects were concentrated on the days messages were sent `[EV Aulagnon]`.
+6. **Don't rely on the score to *start* users.** Streak highlighting won on the intensive margin but lost to personalised reminders on the extensive margin `[EV Aulagnon]`: use proximal personalised prompts to get the first action, and let momentum scoring take over once the user is engaged.
+7. **Make logging one-tap, and optionally shareable.** Monitoring promoted attainment, with larger effects when progress was physically recorded and publicly reported `[EV Harkin]`. Sharing should be opt-in: internal attribution of a break amplifies disengagement `[EV Silverman & Barasch]`, so socially visible failure is a specific hazard for this audience `[INF]`.
+8. **Define the window relative to target frequency, not raw day counts.** "3 of the last 7" for a three-times-weekly goal; not every goal is daily `[INF]`.
+9. **Keep the 28-day layer non-punitive and secondary** — trend line or heat-map, with no zero state and no pass/fail. It exists to show the 10-week formation arc `[EV Gardner/Lally]`, not to be a second target `[INF]`.
+10. **Expect idiosyncrasy.** Decay timing ranged 1–65 days and habit plateau 18–254 days, with substantial between-person heterogeneity `[EV Lally; Edgren]`; a single fixed horizon is a default, not a truth.
+
+---
+
+## 6. Caveats, and what would change the recommendation
+
+- **No head-to-head evidence exists.** No study located compares rolling 7-day, rolling 28-day, weekly reset, and lifetime scoring against each other on lapse recovery or habit outcomes `[GAP]`. The recommendation is a mechanistic synthesis, not a replication of a trial.
+- **Population transfer.** The strongest ADHD reinforcement evidence comes from laboratory choice tasks and clinical samples (including children) `[EV Sonuga-Barke; Luman; Marx; Jackson & MacKillop]`; extrapolating to voluntary use of a consumer app by adults is an inference `[INF/GAP]`.
+- **Setting transfer.** The one large streak RCT was Peruvian schoolchildren over a summer break `[EV Aulagnon]`; the weightiest broken-streak evidence is lab-style rather than a large field experiment `[EV Silverman & Barasch]`.
+- **Mechanism is not fully pinned.** Dai et al. state explicitly that their field data provide imperfect insight into the mechanism behind the fresh start effect.
+- **Decay evidence is indirect.** Edgren et al. studied *intentional degradation* of established health-risk habits, not lapses during habit *acquisition*; it informs timescales only.
+- **What would change this:** a within-product randomised comparison of a 7-day primary window versus a 28-day primary window, scored on day-30/day-90 retention, speed of return after a first miss, and self-reported automaticity, would resolve the one genuinely open question here. Absent that, the audience-specific reinforcement-timing evidence is the tiebreaker, and it favours the shorter window.
+
+---
+
+## 7. Sources
+
+Broad starter links are given; DOIs are the citable form.
+
+1. Lally P, van Jaarsveld CHM, Potts HWW, Wardle J (2010). How are habits formed: Modelling habit formation in the real world. *European Journal of Social Psychology* 40(6):998–1009. https://doi.org/10.1002/ejsp.674
+2. Gardner B, Lally P, Wardle J (2012). Making health habitual: the psychology of 'habit-formation' and general practice. *British Journal of General Practice* 62(605):664–666. https://doi.org/10.3399/bjgp12X659466 · full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC3505409/
+3. Edgren R, Baretta D, Inauen J (2025). The temporal trajectories of habit decay in daily life. *Applied Psychology: Health and Well-Being* 17(1):e12612. https://doi.org/10.1111/aphw.12612 · https://pubmed.ncbi.nlm.nih.gov/39456116/
+4. Dai H, Milkman KL, Riis J (2014). The Fresh Start Effect: Temporal Landmarks Motivate Aspirational Behavior. *Management Science* 60(10):2563–2582. https://doi.org/10.1287/mnsc.2014.1901 · author PDF: https://faculty.wharton.upenn.edu/wp-content/uploads/2014/06/Dai_Fresh_Start_2014_Mgmt_Sci.pdf
+5. Silverman J, Barasch A (2023). On or Off Track: How (Broken) Streaks Affect Consumer Decisions. *Journal of Consumer Research* 49(6):1095–1117. https://doi.org/10.1093/jcr/ucac029
+6. Soman D, Cheema A (2004). When Goals Are Counterproductive: The Effects of Violation of a Behavioral Goal on Subsequent Performance. *Journal of Consumer Research* 31(1):52–62. https://doi.org/10.1086/383423
+7. Harkin B, Webb TL, Chang BPI, Prestwich A, Conner M, Kellar I, Benn Y, Sheeran P (2016). Does monitoring goal progress promote goal attainment? A meta-analysis of the experimental evidence. *Psychological Bulletin* 142(2):198–229. https://doi.org/10.1037/bul0000025 · https://pubmed.ncbi.nlm.nih.gov/26479070/
+8. Kivetz R, Urminsky O, Zheng Y (2006). The Goal-Gradient Hypothesis Resurrected. *Journal of Marketing Research* 43(1):39–58. https://doi.org/10.1509/jmkr.43.1.39
+9. Nunes JC, Drèze X (2006). The Endowed Progress Effect: How Artificial Advancement Increases Effort. *Journal of Consumer Research* 32(4):504–512. https://doi.org/10.1086/500480
+10. Jackson JN, MacKillop J (2016). Attention-Deficit/Hyperactivity Disorder and Monetary Delay Discounting: A Meta-Analysis of Case-Control Studies. *Biological Psychiatry: CNNI* 1(4):316–325. https://doi.org/10.1016/j.bpsc.2016.01.007 · https://pubmed.ncbi.nlm.nih.gov/27722208/
+11. Marx I, Hacker T, Yu X, Cortese S, Sonuga-Barke E (2021). ADHD and the Choice of Small Immediate Over Larger Delayed Rewards. *Journal of Attention Disorders* 25(2):171–187. https://doi.org/10.1177/1087054718772138 · https://pubmed.ncbi.nlm.nih.gov/29806533/
+12. Luman M, Oosterlaan J, Sergeant JA (2005). The impact of reinforcement contingencies on AD/HD. *Clinical Psychology Review* 25(2):183–213. https://doi.org/10.1016/j.cpr.2004.11.001 · https://pubmed.ncbi.nlm.nih.gov/15642646/
+13. Sonuga-Barke EJS, Taylor E, Sembi S, Smith J (1992). Hyperactivity and delay aversion—I. *Journal of Child Psychology and Psychiatry* 33(2):387–398. https://doi.org/10.1111/j.1469-7610.1992.tb00874.x · https://pubmed.ncbi.nlm.nih.gov/1564081/
+14. Volkow ND, Wang GJ, Newcorn JH, et al. (2011). Motivation deficit in ADHD is associated with dysfunction of the dopamine reward pathway. *Molecular Psychiatry* 16(11):1147–1154. https://doi.org/10.1038/mp.2010.97 · https://pubmed.ncbi.nlm.nih.gov/20856250/
+15. Barkley RA, Murphy KR, Bush T (2001). Time perception and reproduction in young adults with ADHD. *Neuropsychology* 15(3):351–360. https://doi.org/10.1037//0894-4105.15.3.351 · https://pubmed.ncbi.nlm.nih.gov/11499990/
+16. Selaskowski B, et al. (2022). Smartphone-assisted psychoeducation in adult ADHD: a randomized controlled trial. *Psychiatry Research* 317:114802. https://doi.org/10.1016/j.psychres.2022.114802 · https://pubmed.ncbi.nlm.nih.gov/36041353/
+17. Aulagnon R, Cristia J, Cueto S, Malamud O (2025). Streaks to Success? The Effects of Highlighting Streaks on Student Effort and Learning. NBER Working Paper 34173. https://www.nber.org/papers/w34173 · PDF: https://www.nber.org/system/files/working_papers/w34173/w34173.pdf
