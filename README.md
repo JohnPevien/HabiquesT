@@ -31,15 +31,15 @@ Requires Node 20+ and pnpm 11.6+. Set `DATABASE_URL`, `NEON_AUTH_BASE_URL`, and 
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Dev server (Turbopack) at 127.0.0.1:3000 |
-| `pnpm build` / `pnpm start` | Production build / serve |
-| `pnpm lint` | ESLint (fails on a11y errors) |
-| `pnpm typecheck` | `next typegen && tsc --noEmit` |
-| `pnpm test:run` | Vitest single run |
-| `pnpm test:e2e:chromium` | Playwright (Chromium) |
-| `pnpm check` | format:check + lint + typecheck + test:run |
+| Command                     | Description                                |
+| --------------------------- | ------------------------------------------ |
+| `pnpm dev`                  | Dev server (Turbopack) at 127.0.0.1:3000   |
+| `pnpm build` / `pnpm start` | Production build / serve                   |
+| `pnpm lint`                 | ESLint (fails on a11y errors)              |
+| `pnpm typecheck`            | `next typegen && tsc --noEmit`             |
+| `pnpm test:run`             | Vitest single run                          |
+| `pnpm test:e2e:chromium`    | Playwright (Chromium)                      |
+| `pnpm check`                | format:check + lint + typecheck + test:run |
 
 ## Documentation
 

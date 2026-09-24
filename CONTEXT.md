@@ -27,7 +27,7 @@ A one-off piece of work with a title, optional due date, effort, and tags. Compl
 _Avoid_: Todo, action item
 
 **Tag**:
-A private, case-insensitive, ≤30-character label attached to habits and tasks. Goals *watch* tags; any action carrying a watched tag influences that goal's Momentum. Normalized spelling makes `#Fitness` and `#fitness` the same tag.
+A private, case-insensitive, ≤30-character label attached to habits and tasks. Goals _watch_ tags; any action carrying a watched tag influences that goal's Momentum. Normalized spelling makes `#Fitness` and `#fitness` the same tag.
 _Avoid_: Category, label, topic
 
 **Effort**:
