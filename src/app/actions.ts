@@ -16,7 +16,7 @@ import {
   profiles,
   tasks,
 } from "@/db/schema";
-import { requireUserId } from "@/db/guard";
+import { requireProfile } from "@/db/guard";
 import {
   CORRECTION_WINDOW_DAYS,
   type Effort,
@@ -25,6 +25,12 @@ import {
   normalizeTag,
 } from "@/lib/engine";
 import { localDayKey, addLocalDays } from "@/lib/local-time";
+
+// Resolve the signed-in profile once per action — owns userId + timezone.
+async function actingAs() {
+  const profile = await requireProfile();
+  return { userId: profile.userId, timezone: profile.timezone };
+}
 
 // ---------------------------------------------------------------------------
 // Profile
@@ -37,7 +43,7 @@ export async function updateProfile(input: {
   mode?: "rpg" | "anime" | "arcade";
   theme?: "system" | "light" | "dark";
 }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .update(profiles)
     .set({ ...input, updatedAt: new Date() })
@@ -53,9 +59,9 @@ export async function createCampaign(input: {
   title: string;
   lengthDays: 30 | 60 | 90;
 }) {
-  const userId = await requireUserId();
-  const startAt = localDayKey(new Date()); // TODO(profile): use profile timezone
-  const endAt = addLocalDays(new Date(), input.lengthDays);
+  const { userId, timezone } = await actingAs();
+  const startAt = localDayKey(new Date(), timezone);
+  const endAt = addLocalDays(new Date(), input.lengthDays, timezone);
   const [row] = await db
     .insert(campaigns)
     .values({
@@ -74,7 +80,7 @@ export async function extendCampaign(input: {
   campaignId: string;
   newEndAt: string;
 }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .update(campaigns)
     .set({ endAt: input.newEndAt, status: "active" })
@@ -85,7 +91,7 @@ export async function extendCampaign(input: {
 }
 
 export async function archiveCampaign(input: { campaignId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .update(campaigns)
     .set({ status: "archived" })
@@ -106,7 +112,7 @@ export async function createGoal(input: {
   targetDate?: string;
   campaignId?: string;
 }) {
-  const userId = await requireUserId();
+  const { userId, timezone } = await actingAs();
   const watchedTags = input.watchedTags
     .map((t) => normalizeTag(t))
     .filter((t): t is string => t !== null);
@@ -119,7 +125,7 @@ export async function createGoal(input: {
       ...(input.metric ? { metric: input.metric } : {}),
       ...(input.targetDate ? { targetDate: input.targetDate } : {}),
       ...(input.campaignId ? { campaignId: input.campaignId } : {}),
-      createdAt: localDayKey(new Date()),
+      createdAt: localDayKey(new Date(), timezone),
     })
     .returning();
   revalidatePath("/");
@@ -127,7 +133,7 @@ export async function createGoal(input: {
 }
 
 export async function achieveGoal(input: { goalId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .update(goals)
     .set({ achievedAt: new Date() })
@@ -136,7 +142,7 @@ export async function achieveGoal(input: { goalId: string }) {
 }
 
 export async function deleteGoal(input: { goalId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .delete(goals)
     .where(and(eq(goals.id, input.goalId), eq(goals.userId, userId)));
@@ -153,7 +159,7 @@ export async function createHabit(input: {
   effort: Effort;
   schedule: Schedule;
 }) {
-  const userId = await requireUserId();
+  const { userId, timezone } = await actingAs();
   const tags = input.tags
     .map((t) => normalizeTag(t))
     .filter((t): t is string => t !== null);
@@ -165,7 +171,7 @@ export async function createHabit(input: {
       tags,
       effort: input.effort,
       schedule: input.schedule,
-      createdAt: localDayKey(new Date()),
+      createdAt: localDayKey(new Date(), timezone),
     })
     .returning();
   revalidatePath("/");
@@ -173,7 +179,7 @@ export async function createHabit(input: {
 }
 
 export async function deleteHabit(input: { habitId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .delete(habits)
     .where(and(eq(habits.id, input.habitId), eq(habits.userId, userId)));
@@ -190,9 +196,9 @@ export async function setOccurrence(input: {
   date: string;
   metCount: number;
 }) {
-  const userId = await requireUserId();
-  const today = localDayKey(new Date());
-  const oldest = addLocalDays(new Date(), -CORRECTION_WINDOW_DAYS);
+  const { userId, timezone } = await actingAs();
+  const today = localDayKey(new Date(), timezone);
+  const oldest = addLocalDays(new Date(), -CORRECTION_WINDOW_DAYS, timezone);
   if (input.date < oldest || input.date > today) {
     throw new Error(
       `Date ${input.date} is outside the correction window (${oldest}..${today})`,
@@ -247,7 +253,7 @@ export async function setOccurrence(input: {
         status: row.status as "pending" | "met" | "partial" | "missed" | "rest",
         xpAwarded: row.xpAwarded,
       },
-      { metCount: input.metCount, now: new Date(), timezone: "UTC" }, // TODO(profile): profile timezone
+      { metCount: input.metCount, now: new Date(), timezone },
     );
     await db
       .update(occurrences)
@@ -263,9 +269,9 @@ export async function setOccurrence(input: {
 
 /** Mark a day as rest — drops out of Momentum entirely (ADR: rest). */
 export async function setRest(input: { habitId: string; date: string }) {
-  const userId = await requireUserId();
-  const today = localDayKey(new Date());
-  const oldest = addLocalDays(new Date(), -CORRECTION_WINDOW_DAYS);
+  const { userId, timezone } = await actingAs();
+  const today = localDayKey(new Date(), timezone);
+  const oldest = addLocalDays(new Date(), -CORRECTION_WINDOW_DAYS, timezone);
   if (input.date < oldest || input.date > today) {
     throw new Error(
       `Date ${input.date} is outside the correction window (${oldest}..${today})`,
@@ -314,7 +320,7 @@ export async function createTask(input: {
   effort: Effort;
   dueDate: string | null;
 }) {
-  const userId = await requireUserId();
+  const { userId, timezone } = await actingAs();
   const tags = input.tags
     .map((t) => normalizeTag(t))
     .filter((t): t is string => t !== null);
@@ -326,7 +332,7 @@ export async function createTask(input: {
       tags,
       effort: input.effort,
       dueDate: input.dueDate,
-      createdAt: localDayKey(new Date()),
+      createdAt: localDayKey(new Date(), timezone),
     })
     .returning();
   revalidatePath("/");
@@ -334,7 +340,7 @@ export async function createTask(input: {
 }
 
 export async function completeTaskAction(input: { taskId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .update(tasks)
     .set({ completedAt: new Date(), updatedAt: new Date() })
@@ -343,7 +349,7 @@ export async function completeTaskAction(input: { taskId: string }) {
 }
 
 export async function reopenTaskAction(input: { taskId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   // Reopen nulls completedAt but keeps xpAwarded — XP paid stays paid (ADR).
   await db
     .update(tasks)
@@ -353,7 +359,7 @@ export async function reopenTaskAction(input: { taskId: string }) {
 }
 
 export async function deleteTask(input: { taskId: string }) {
-  const userId = await requireUserId();
+  const { userId } = await actingAs();
   await db
     .delete(tasks)
     .where(and(eq(tasks.id, input.taskId), eq(tasks.userId, userId)));
